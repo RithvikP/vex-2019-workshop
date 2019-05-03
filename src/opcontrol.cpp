@@ -26,14 +26,12 @@
  */
 void opcontrol() {
 	/*
-	 * Define variables used by different robot functionality.
+	 * Define variables used by different robot functionality
 	 */
 	// Drive code variables
 	int left_y;
 	int right_x;
 	int right_y;
-	int forward;
-	int sideways;
 	int right_power;
 	int left_power;
 
@@ -52,31 +50,45 @@ void opcontrol() {
 	while (true) {
 		/*
 		 * Drivetrain code
-		 * This code controls how the robot moves around the field.
+		 * This code controls how the robot moves around the field
 		 */
 
 		left_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 		right_x = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_X);
 		right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
+		// Filter joystick values to prevent the drive from responding to miscalibrated joysticks
+		if (std::abs(left_y) < DRIVE_THRESHOLD) {
+			left_y = 0;
+		}
+		if (std::abs(right_y) < DRIVE_THRESHOLD) {
+			right_y = 0;
+		}
+		if(std::abs(right_x) < DRIVE_THRESHOLD) {
+			right_x = 0;
+		}
 
-		if(ARCADE) {
-			forward = std::abs(left_y) < DRIVE_THRESHOLD ? 0 : left_y;
-			sideways = std::abs(right_x) < DRIVE_THRESHOLD ? 0 : right_x;
-
-			right_power = forward-sideways;
-			left_power = forward+sideways;
+		// Choose between arcade and tank drive controls
+		if (ARCADE) {
+			right_power = left_y - right_x;
+			left_power = left_y + right_x;
 		}
 		else {
-			right_power = std::abs(right_y) < DRIVE_THRESHOLD ? 0 : right_y;
-			left_power = std::abs(left_y) < DRIVE_THRESHOLD ? 0 : left_y;
+			right_power = right_y;
+			left_power = left_y;
 		}
 
 		// Limit motor powers
-		right_power = right_power > (int)(127*DRIVE_SPEED) ? (int)(127*DRIVE_SPEED) : right_power;
-		right_power = right_power < -(int)(127*DRIVE_SPEED) ? -(int)(127*DRIVE_SPEED) : left_power;
-		left_power = left_power > (int)(127*DRIVE_SPEED) ? (int)(127*DRIVE_SPEED) : right_power;
-		left_power = left_power < -(int)(127*DRIVE_SPEED) ? -(int)(127*DRIVE_SPEED) : left_power;
+		if (std::abs(right_power) > 127) {
+			right_power = std::copysign(127, right_power); // Copies the sign of right_power to 127
+		}
+		if (std::abs(left_power) > 127) {
+			left_power = std::copysign(127, left_power); // Copies the sign of left_power to 127
+		}
+
+		// Limit drivetrain speed
+		right_power = (int) (right_power * DRIVE_SPEED);
+		left_power = (int) (left_power * DRIVE_SPEED);
 
 		// Assign power to the motors
 		right_drive.move(right_power);
@@ -84,7 +96,7 @@ void opcontrol() {
 
 		/*
 		 * Lift code
-		 * This code controls the arm of the robot.
+		 * This code controls the arm of the robot
 		 */
 
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1) {	// Check if a button on the controller is pressed
@@ -104,7 +116,7 @@ void opcontrol() {
 
 		/*
 		 * Claw code
-		 * This code controls the claw on the robot.
+		 * This code controls the claw on the robot
 		 */
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1) {
 			claw.move(127); // Close the claw
