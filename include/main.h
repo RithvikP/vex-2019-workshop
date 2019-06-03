@@ -72,6 +72,14 @@ void opcontrol(void);
 }
 #endif
 
+// Declarations of ports and motor functions
+extern const int RIGHT_DRIVE_PORT;
+extern const int LEFT_DRIVE_PORT;
+extern const int LIFT_PORT;
+extern const int CLAW_PORT;
+void move_lift(int power);
+void move_claw(int power);
+
 #ifdef __cplusplus
 /**
  * You can add C++-only headers here

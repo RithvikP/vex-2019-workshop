@@ -9,23 +9,26 @@
 
 const int DRIVE_SPEED = 0.75; // Changes the maximum drive speed (range between 0 and 1)
 const int ARCADE = true; // Controls whether the drive is tank style (false) or arcade style (true)
-const int DRIVE_THRESHOLD  = 8; // Controls the minimum power that can be assigned to drive motors
-
+const int DRIVE_THRESHOLD  = 12; // Controls the minimum power that can be assigned to drive motors
+const int LEFT_DRIVE_PORT = 1;
+const int RIGHT_DRIVE_PORT = 10;
+const int LIFT_PORT = 8;
+const int CLAW_PORT = 3;
 
 // Define the main controller of the robot.
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Define the robot's motors with their respective ports.
 pros::Motor left_drive (1);
-pros::Motor right_drive (2);
-pros::Motor lift (3);
-pros::Motor claw (4);
+pros::Motor right_drive (10);
+pros::Motor lift (8);
+pros::Motor claw (3);
 
 /**
  * Assign specified powers for the right and left sides of the drivetrain to the left and right motors, respectively.
  */
 void move_drive(int right, int left) {
-	right_drive.move(right);
+	right_drive.move(-right);
 	left_drive.move(left);
 }
 
@@ -145,7 +148,7 @@ void opcontrol() {
 			while (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1) {
 				pros::delay(10);
 			}
-			move_claw(0); // Assign no power and allow the motor to holds it's position.
+			move_claw(20); // Assign no power and allow the motor to holds it's position.
 		}
 		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1) {
 			move_claw(-127); // Open the claw
