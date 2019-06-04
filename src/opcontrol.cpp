@@ -7,7 +7,7 @@
  * If you desire, you can talk to a volunteer about ways to improve this code to better prepare it for competitions ahead.
  */
 
-const int DRIVE_SPEED = 0.75; // Changes the maximum drive speed (range between 0 and 1)
+const double DRIVE_SPEED = 0.75; // Changes the maximum drive speed (range between 0 and 1)
 const int ARCADE = true; // Controls whether the drive is tank style (false) or arcade style (true)
 const int DRIVE_THRESHOLD  = 12; // Controls the minimum power that can be assigned to drive motors
 const int LEFT_DRIVE_PORT = 1;
@@ -19,10 +19,10 @@ const int CLAW_PORT = 3;
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Define the robot's motors with their respective ports.
-pros::Motor left_drive (1);
-pros::Motor right_drive (10);
-pros::Motor lift (8);
-pros::Motor claw (3);
+pros::Motor left_drive (LEFT_DRIVE_PORT);
+pros::Motor right_drive (RIGHT_DRIVE_PORT);
+pros::Motor lift (LIFT_PORT);
+pros::Motor claw (CLAW_PORT);
 
 /**
  * Assign specified powers for the right and left sides of the drivetrain to the left and right motors, respectively.
@@ -63,13 +63,9 @@ void opcontrol() {
 	// Drive code variables
 	int left_y;  // Left joystick Y
 	int right_x; // Right joystick X
-	int right_y; // Rithg joystic Y
+	int right_y; // Right joystick Y
 	int right_power;
 	int left_power;
-	
-	// Configure the lift and claw motors to hold any position they come to rest in
-	lift.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-	claw.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
 	while (true) {
 		/*
@@ -129,14 +125,14 @@ void opcontrol() {
 			while (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1) { // Wait for the button to be released
 				pros::delay(10);
 			}
-			move_lift(0); // Assign no power and allow the motor to holds it's position.
+			move_lift(10); // Assign a little power and allow the motor to hold it's position.
 		}
 		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1) {
-			move_lift(-127); // Move the lift down
+			move_lift(-40); // Move the lift down
 			while (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1) {
 				pros::delay(10);
 			}
-			move_lift(0); // Assign no power and allow the motor to holds it's position.
+			move_lift(10); // Assign a little power and allow the motor to hold it's position.
 		}
 
 		/*
@@ -148,14 +144,14 @@ void opcontrol() {
 			while (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1) == 1) {
 				pros::delay(10);
 			}
-			move_claw(20); // Assign no power and allow the motor to holds it's position.
+			move_claw(25); // Assign a little power and allow the motor to hold it's position.
 		}
 		else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1) {
 			move_claw(-127); // Open the claw
 			while (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1) {
 				pros::delay(10);
 			}
-			move_claw(0); // Assign no power and allow the motor to holds it's position.
+			move_claw(-10); // Assign a little power and allow the motor to hold it's position.
 		}
 		
 
