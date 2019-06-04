@@ -19,16 +19,17 @@ const int CLAW_PORT = 3;
 pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Define the robot's motors with their respective ports.
-pros::Motor left_drive (LEFT_DRIVE_PORT);
-pros::Motor right_drive (RIGHT_DRIVE_PORT);
-pros::Motor lift (LIFT_PORT);
-pros::Motor claw (CLAW_PORT);
+// Passing true for the second parameter reverses the motor.
+pros::Motor left_drive (LEFT_DRIVE_PORT, false);
+pros::Motor right_drive (RIGHT_DRIVE_PORT, true);
+pros::Motor lift (LIFT_PORT, false);
+pros::Motor claw (CLAW_PORT, false);
 
 /**
  * Assign specified powers for the right and left sides of the drivetrain to the left and right motors, respectively.
  */
 void move_drive(int right, int left) {
-	right_drive.move(-right);
+	right_drive.move(right);
 	left_drive.move(left);
 }
 

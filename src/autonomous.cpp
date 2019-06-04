@@ -11,20 +11,36 @@
  */
 void autonomous() {
   // Create a chassis to use for autonomous (this has built in autonomous control)
+  // The last two numbers are used to tune turn and move amounts
   auto chassis = ChassisControllerFactory::create(
-    RIGHT_DRIVE_PORT, -LEFT_DRIVE_PORT,
+    -RIGHT_DRIVE_PORT, LEFT_DRIVE_PORT,
     AbstractMotor::gearset::green,
-    {4.15_in, 10.5_in});
+    {4_in, 12.6_in});
+
+  chassis.setMaxVelocity(70);
 
   // Move forwards 10 inches
   chassis.moveDistance(10_in);
-  // Turn 90 degrees
-  chassis.turnAngle(90_deg);
+
+  // Close the claw
+  move_claw(127);
+  delay(150);
+  // Apply constant power to hold a cube
+  move_claw(25);
+
   // Lift up for 300 milliseconds
   move_lift(127);
   delay(300);
-  move_lift(0);
+  // Apply constant power to hold the arm up
+  move_lift(10);
 
+
+  // Turn 90 degrees to the left
+  chassis.turnAngle(90_deg);
+
+  chassis.moveDistance(5_in);
+  
+  
   /*
    * Add new autonomous code here (and edit or remove the example above)
    */
