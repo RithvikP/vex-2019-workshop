@@ -8,7 +8,7 @@
  */
 
 const double DRIVE_SPEED = 0.75; // Changes the maximum drive speed (range between 0 and 1)
-const int ARCADE = true; // Controls whether the drive is tank style (false) or arcade style (true)
+const bool ARCADE = true; // Controls whether the drive is tank style (false) or arcade style (true)
 const int DRIVE_THRESHOLD  = 12; // Controls the minimum power that can be assigned to drive motors
 const int LEFT_DRIVE_PORT = 1;
 const int RIGHT_DRIVE_PORT = 10;
